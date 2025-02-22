@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   redis:
+    container_name: redis-1
     image: redis
     ports:
       - 6379:6379
@@ -9,6 +10,7 @@ services:
       - lets-do-it-together
 
   mongo:
+    container_name: mongo-1
     image: mongo
     restart: always
     ports:
@@ -37,6 +39,31 @@ services:
     networks:
       - lets-do-it-together
 
+  gateway-service:
+    build:
+      context: ./gateway-service
+      target: prod
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+    ports:
+      - "8090:8090"
+    environment:
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_TTL: ${REDIS_TTL}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ISSUER: ${JWT_ISSUER}
+      GATEWAY_TOKEN: ${GATEWAY_TOKEN}
+      AUTH_SERVICE: ${AUTH_SERVICE}
+      AUTH_SERVICE_HOST: ${AUTH_SERVICE_HOST}
+      USER_SERVICE: ${USER_SERVICE}
+      USER_SERVICE_HOST: ${USER_SERVICE_HOST}
+    env_file:
+      - .env
+    networks:
+      - lets-do-it-together
+
   auth-service:
     build:
       context: ./auth-service
@@ -45,9 +72,8 @@ services:
     depends_on:
       - redis
       - mongo
-      - mongo-express
     ports:
-      - "8090:8090"
+      - "8091:8091"
     environment:
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
@@ -61,6 +87,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_ACCESS_EXPIRATION: ${JWT_ACCESS_EXPIRATION}
       JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION}
+      GATEWAY_TOKEN: ${GATEWAY_TOKEN}
     env_file:
       - .env
     networks:

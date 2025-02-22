@@ -41,6 +41,15 @@ public class GatewayConfig {
                                 .setRequestHeader("X-Forwarded-Token", gatewayToken)
                                 .filter(jwtAuthenticationFilter))
                         .uri(gatewayUserHost))
+
+                .route(gatewayAuth, r -> r.path("/api/auth/swagger-ui/**", "/api/auth/v3/api-docs*/**")
+                        .filters(f -> f.setRequestHeader("X-Forwarded-For", gatewayAuth)
+                                .setRequestHeader("X-Forwarded-Token", gatewayToken))
+                        .uri(gatewayAuthHost))
+                .route(gatewayUser, r -> r.path("/api/users/swagger-ui/**", "/api/users/v3/api-docs*/**")
+                        .filters(f -> f.setRequestHeader("X-Forwarded-For", gatewayUser)
+                                .setRequestHeader("X-Forwarded-Token", gatewayToken))
+                        .uri(gatewayUserHost))
                 .build();
     }
 

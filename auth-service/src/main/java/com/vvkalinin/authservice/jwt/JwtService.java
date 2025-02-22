@@ -23,8 +23,6 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private final TokenBlackListService tokenBlackListService;
-
     @Value("${vvkalinin.jwt.secret}")
     private String jwtSecret;
 
@@ -36,10 +34,6 @@ public class JwtService {
 
     @Value("${spring.application.name}")
     private String issuer;
-
-    public JwtService(TokenBlackListService tokenBlackListService) {
-        this.tokenBlackListService = tokenBlackListService;
-    }
 
     public String generateToken(User user) throws IllegalArgumentException, JWTCreationException {
         return JWT.create()
@@ -60,15 +54,6 @@ public class JwtService {
                 .withIssuedAt(new Date(currentTimeMillis()))
                 .withExpiresAt(new Date(currentTimeMillis() + jwtRefreshExpirationMs))
                 .sign(HMAC256(jwtSecret));
-    }
-
-    public String validateAccessToken(String token) throws JWTVerificationException {
-        JWTVerifier verifier = JWT.require(HMAC256(jwtSecret))
-                .withIssuer(issuer)
-                .withClaim("type", ACCESS.name())
-                .build();
-        DecodedJWT jwt = verifier.verify(token);
-        return jwt.getSubject();
     }
 
     public String validateRefreshToken(String token) throws JWTVerificationException {

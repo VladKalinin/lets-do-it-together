@@ -25,9 +25,4 @@ public class UserService {
         return this::getByUsername;
     }
 
-    public User getCurrentUser() {
-        var username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return getByUsername(username);
-    }
-
 }

@@ -13,6 +13,8 @@ import com.vvkalinin.authservice.model.User;
 import com.vvkalinin.authservice.repository.UserRepository;
 import com.vvkalinin.authservice.service.redis.TokenBlackListService;
 import com.vvkalinin.authservice.service.user.UserService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;

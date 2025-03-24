@@ -1,7 +1,6 @@
 package com.vvkalinin.springboot.webservice.gatewayservice.jwt;
 
 import com.vvkalinin.springboot.webservice.gatewayservice.service.TokenBlacklistService;
-import lombok.AllArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.http.HttpHeaders;
@@ -12,22 +11,21 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
-@AllArgsConstructor
 public class JwtAuthenticationFilter implements GatewayFilter {
 
-    private JwtService jwtService;
-    public TokenBlacklistService tokenBlacklistService;
+    private final JwtService jwtService;
+
+    private final TokenBlacklistService tokenBlacklistService;
+
+    public JwtAuthenticationFilter(JwtService jwtService, TokenBlacklistService tokenBlacklistService) {
+        this.jwtService = jwtService;
+        this.tokenBlacklistService = tokenBlacklistService;
+    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         var request = exchange.getRequest();
-
-        if (request.getURI().getPath().startsWith("/api/v1/auth") ||
-                request.getURI().getPath().startsWith("/api/auth/swagger-ui") ||
-                request.getURI().getPath().startsWith("/api/users/swagger-ui")) {
-            return chain.filter(exchange);
-        }
 
         var authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {

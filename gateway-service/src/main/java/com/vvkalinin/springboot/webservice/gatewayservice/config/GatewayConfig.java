@@ -1,7 +1,6 @@
 package com.vvkalinin.springboot.webservice.gatewayservice.config;
 
 import com.vvkalinin.springboot.webservice.gatewayservice.jwt.JwtAuthenticationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
@@ -11,23 +10,33 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GatewayConfig {
 
-    @Value("${vvkalinin.gateway.token}")
-    private String gatewayToken;
+    private final String gatewayToken;
 
-    @Value("${vvkalinin.gateway.auth}")
-    private String gatewayAuth;
+    private final String gatewayAuth;
 
-    @Value("${vvkalinin.gateway.auth.host}")
-    private String gatewayAuthHost;
+    private final String gatewayAuthHost;
 
-    @Value("${vvkalinin.gateway.user}")
-    private String gatewayUser;
+    private final String gatewayUser;
 
-    @Value("${vvkalinin.gateway.user.host}")
-    private String gatewayUserHost;
+    private final String gatewayUserHost;
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public GatewayConfig(
+            @Value("${vvkalinin.gateway.token}") String gatewayToken,
+            @Value("${vvkalinin.gateway.auth}") String gatewayAuth,
+            @Value("${vvkalinin.gateway.auth.host}") String gatewayAuthHost,
+            @Value("${vvkalinin.gateway.user}") String gatewayUser,
+            @Value("${vvkalinin.gateway.user.host}") String gatewayUserHost,
+            JwtAuthenticationFilter jwtAuthenticationFilter
+    ) {
+        this.gatewayToken = gatewayToken;
+        this.gatewayAuth = gatewayAuth;
+        this.gatewayAuthHost = gatewayAuthHost;
+        this.gatewayUser = gatewayUser;
+        this.gatewayUserHost = gatewayUserHost;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {

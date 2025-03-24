@@ -51,7 +51,6 @@ services:
     environment:
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
-      REDIS_TTL: ${REDIS_TTL}
       JWT_SECRET: ${JWT_SECRET}
       JWT_ISSUER: ${JWT_ISSUER}
       GATEWAY_TOKEN: ${GATEWAY_TOKEN}

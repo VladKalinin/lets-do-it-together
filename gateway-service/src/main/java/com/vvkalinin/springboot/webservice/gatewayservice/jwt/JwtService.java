@@ -13,11 +13,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 
-    @Value("${vvkalinin.jwt.secret}")
-    private String jwtSecret;
+    private final String jwtSecret;
 
-    @Value("${vvkalinin.jwt.issuer}")
-    private String issuer;
+    private final String issuer;
+
+    public JwtService(@Value("${vvkalinin.jwt.secret}") String jwtSecret,
+                      @Value("${vvkalinin.jwt.issuer}") String issuer) {
+        this.jwtSecret = jwtSecret;
+        this.issuer = issuer;
+    }
 
     public DecodedJWT validateToken(String token) throws JWTVerificationException {
         JWTVerifier verifier = JWT.require(HMAC256(jwtSecret))
